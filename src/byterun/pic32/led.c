@@ -285,9 +285,7 @@ PROGMEM opcode_t const ocaml_bytecode[OCAML_BYTECODE_BSIZE] = {
   /* 51 */  OCAML_STOP
 };
 
-//#include </usr/local/include/omicrob/vm/runtime.c>
-#include "/home/ishyro/Documents/Info/M1/S2/Projet/h/Arduino.h"
-#include "/home/ishyro/Documents/Info/M1/S2/Projet/h/System_Defs.h"
+#include </usr/local/include/omicrob/vm/runtime.c>
 
 PROGMEM void * const ocaml_primitives[OCAML_PRIMITIVE_NUMBER] = {
   /*  0 */  //(void *) &caml_avr_write_register,

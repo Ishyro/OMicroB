@@ -4,13 +4,13 @@ TARGETS := $(BIN)/omicrob
 
 omicrob: $(TARGETS)
 
-$(BIN)/omicrob: avr_config.ml config.ml omicrob.ml
+$(BIN)/omicrob: device_config.ml config.ml omicrob.ml
 	$(OCAMLOPT) -w @a -safe-string -strict-formats -strict-sequence unix.cmxa $^ -o $@
 
 config.ml: $(ETC)/config.ml
 	cp $< $@
 
 clean:
-	@rm -f *.cmo *.cmi *.cmx *~ 
+	@rm -f *.cmo *.cmi *.cmx *~
 
 .PHONY: omicrob clean

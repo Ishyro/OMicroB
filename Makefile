@@ -44,6 +44,7 @@ install: all
 	cp -a src/byterun/simul "$(INCLUDEDIR)/"
 	cp -a src/byterun/avr "$(INCLUDEDIR)/"
 	cp -a src/byterun/stdlib "$(INCLUDEDIR)/"
+	cp -a src/byterun/pic32 "$(INCLUDEDIR)/"
 
 uninstall:
 	-rm -f "$(BINDIR)/bc2c"
