@@ -5,6 +5,7 @@
 #include <time.h>
 #include "shared.h"
 #include "simul.h"
+#include "../stdlib/delay.h"
 
 /******************************************************************************/
 /******************************************************************************/
@@ -518,6 +519,37 @@ void exec_instr(char *instr, int size){
       invalid_instr(instr);
     }
   }
+}
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+void pic32_init() {
+  // TODO ?
+}
+
+void pic32_schedule_task() {
+  // TODO ?
+}
+
+void pic32_pin_mode(uint8_t p, uint8_t mode) {
+  if(mode == 0) printf("Set pin %d to INPUT mode\n", p);
+  else if(mode == 1) printf("Set pin %d to OUTPUT mode\n", p);
+  else printf("Set pin %d to INPUT_PULLUP mode\n", p);
+}
+
+void pic32_digital_write(uint8_t p, uint8_t level) {
+  if(level == 0) printf("Wrote LOW to pin %d\n", p);
+  else printf("Wrote HIGH to pin %d\n", p);
+}
+
+uint8_t pic32_digital_read(uint8_t _p) {
+  return 0;
+}
+
+void pic32_delay(int ms) {
+  stdlib_delay(ms);
 }
 
 /******************************************************************************/

@@ -48,7 +48,7 @@ let fubarinoMiniConfig: config = {
   avr = "";
   baud = 115_200;
   clock = 48_000_000;
-  device_def = "D_BOARD_FUBARINO_MINI_";
+  device_def = "DEVICE_FUBARINO_MINI";
   pins_module = "FubarinoMiniPins";
 }
 

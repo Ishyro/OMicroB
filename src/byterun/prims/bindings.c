@@ -12,6 +12,7 @@
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
+#if defined(__OCAML__) || defined(__AVR__) || defined(__PC__)
 
 value caml_avr_set_bit(value reg, value bit) {
   avr_set_bit(Int_val(reg), Int_val(bit));
@@ -28,7 +29,7 @@ value caml_avr_read_bit(value reg, value bit) {
 }
 
 value caml_avr_delay(value ms) {
-  delay(Int_val(ms));
+  stdlib_delay(Int_val(ms));
   return Val_unit;
 }
 
@@ -42,6 +43,45 @@ value caml_avr_write_register(value reg, value val) {
 value caml_avr_read_register(value reg) {
   return Val_int(avr_read_register(Int_val(reg)));
 }
+
+#endif
+
+/******************************************************************************/
+/******************************************************************************/
+
+#if defined(__OCAML__) || defined(__PIC32__) || defined(__PC__)
+
+value caml_pic32_init(value unit) {
+  pic32_init();
+  return Val_unit;
+}
+
+
+value caml_pic32_schedule_task(value unit) {
+  pic32_schedule_task();
+  return Val_unit;
+}
+
+value caml_pic32_pin_mode(value pin, value mode) {
+  pic32_pin_mode(Int_val(pin), Int_val(mode));
+  return Val_unit;
+}
+
+value caml_pic32_digital_write(value pin, value level) {
+  pic32_digital_write(Int_val(pin), Int_val(level));
+  return Val_unit;
+}
+
+value caml_pic32_digital_read(value pin) {
+  return Val_int(pic32_digital_read(Int_val(pin)));
+}
+
+value caml_pic32_delay(value ms) {
+  pic32_delay(Int_val(ms));
+  return Val_unit;
+}
+
+#endif
 
 /******************************************************************************/
 

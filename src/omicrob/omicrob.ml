@@ -13,7 +13,7 @@ let default_arch       = 32
 let default_ocamlc_options = [ "-g"; "-w"; "A"; "-safe-string"; "-strict-sequence"; "-strict-formats"; "-ccopt"; "-D__OCAML__" ]
 let default_cxx_options = [ "-g"; "-Wall"; "-O"; "-std=c++11" ]
 let default_avr_cxx_options = [ "-g"; "-fno-exceptions"; "-Wall"; "-std=c++11"; "-O2"; "-Wnarrowing"; "-Wl,-Os"; "-fdata-sections"; "-ffunction-sections"; "-Wl,-gc-sections" ]
-let default_pic32_cc_options = [ "-w"; "-Os"; "-mdebugger"; "-mno-peripheral-libs"; "-nostartfiles" ]
+let default_pic32_cxx_options = [ "-w"; "-Os"; "-mdebugger"; "-mno-peripheral-libs"; "-nostartfiles" ]
 let default_pic32_board_options = [ "-c"; "-g"; "-O2"; "-w"; "-std=gnu++11"; "-DARDUINO_ARCH_PIC32"; "-mno-smart-io"; "-ffunction-sections"; "-fdata-sections"; "-mdebugger"; "-Wcast-align"; "-fno-short-double"; "-ftoplevel-reorder"; "-fno-exceptions" ]
 
 let default_config = ref Device_config.arduboyConfig
@@ -564,57 +564,58 @@ let () =
       exit 0;
   )
 
-(******************************************************************************)
-(* Compile .mli, .ml, .cmo and .c into a .byte *)
+  (******************************************************************************)
+  (* Compile .mli, .ml, .cmo and .c into a .byte *)
 
-let available_byte = ref input_byte
+  let available_byte = ref input_byte
 
-let () =
-  if input_mls <> [] || input_cmos <> [] then (
-    should_be_none_file input_byte;
-    should_be_none_file input_avr;
-    should_be_none_file input_elf;
-    should_be_none_file input_hex;
+  let () =
+    if input_mls <> [] || input_cmos <> [] then (
+      should_be_none_file input_byte;
+      should_be_none_file input_avr;
+      should_be_none_file input_elf;
+      should_be_none_file input_hex;
 
-    if input_cmos = [] && not (List.exists (fun path -> Filename.extension path = ".ml") input_mls) then (
-      error "cannot generate a .byte only with OCaml interfaces";
-    );
+      if input_cmos = [] && not (List.exists (fun path -> Filename.extension path = ".ml") input_mls) then (
+        error "cannot generate a .byte only with OCaml interfaces";
+      );
 
-    let input_paths =
-      List.filter (fun path ->
-        match Filename.extension path with
-        | ".mli" | ".ml" | ".cmo" | ".c" -> true
-        | _ -> false
-      ) input_files in
+      let input_paths =
+        List.filter (fun path ->
+          match Filename.extension path with
+          | ".mli" | ".ml" | ".cmo" | ".c" -> true
+          | _ -> false
+        ) input_files in
 
-    let output_path =
-      get_first_defined [
-        output_byte;
-        output_elf;
-        output_avr;
-        output_hex;
-        last_src;
-      ] ".byte" in
+      let output_path =
+        get_first_defined [
+          output_byte;
+          output_elf;
+          output_avr;
+          output_hex;
+          last_src;
+        ] ".byte" in
 
-    available_byte := Some output_path;
+        available_byte := Some output_path;
 
-    let vars = [ ("CAMLLIB", libdir) ] in
-    let cmd = [ Config.ocamlc ] @ default_ocamlc_options @ ppx_options @ [ "-custom" ] @ mlopts in
-    let cmd = if trace > 0 then cmd @ [ "-ccopt"; "-DDEBUG=" ^ string_of_int trace ] else cmd in
-    let cmd = cmd @ List.flatten (List.map (fun cxxopt -> [ "-ccopt"; cxxopt ]) cxxopts) in
-    let cmd = cmd @ input_paths @ [ "-o"; output_path ] in
-    let cmd = cmd @ (if(!default_config.typeD = AVR)
-                 then [ "-open"; Printf.sprintf "Avr.%s" !default_config.pins_module ]
-                 else []) in
-    run ~vars cmd;
+      let vars = [ ("CAMLLIB", libdir) ] in
+      let cmd = [ Config.ocamlc ] @ default_ocamlc_options @ ppx_options @ [ "-custom" ] @ mlopts in
+      let cmd = if trace > 0 then cmd @ [ "-ccopt"; "-DDEBUG=" ^ string_of_int trace ] else cmd in
+      let cmd = cmd @ List.flatten (List.map (fun cxxopt -> [ "-ccopt"; cxxopt ]) cxxopts) in
+      let cmd = cmd @ input_paths @ [ "-o"; output_path ] in
+      let cmd = cmd @ (if(!default_config.typeD = AVR)
+                       then [ "-open"; Printf.sprintf "Avr.%s" !default_config.pins_module ]
+                       else []) in
+      run ~vars cmd;
 
-    let cmd = [ Config.ocamlclean; output_path; "-o"; output_path ] in
-    run cmd;
-  ) else (
-    should_be_empty_options "-mlopt" mlopts;
-  )
+      let cmd = [ Config.ocamlclean; output_path; "-o"; output_path ] in
+      run cmd;
+    ) else (
+      should_be_empty_options "-mlopt" mlopts;
+    )
 
-let available_byte = !available_byte
+  let available_byte = !available_byte
+
 
 (******************************************************************************)
 (* Compile a .byte into a .c *)
@@ -683,7 +684,7 @@ let available_c = !available_c
 let available_elf = ref input_elf
 
 let () =
-  if !default_config.typeD = AVR && available_c <> None && (simul || output_elf <> None || no_output_requested) then (
+  if available_c <> None && (simul || output_elf <> None || no_output_requested) then (
     should_be_none_file input_avr;
     should_be_none_file input_elf;
     should_be_none_file input_hex;
@@ -809,18 +810,18 @@ let () =
 
     available_pic32_elf := Some output_path;
 
-    let cmd = [ Config.pic32_cc  ] @ default_pic32_board_options in
+    let cmd = [ Config.pic32_cxx  ] @ default_pic32_board_options in
     let cmd = cmd @ [ "-mprocessor=32MX250F128D"; "-DF_CPU=48000000L"; "-DARDUINO=10808"; ] in
     let cmd = cmd @ [ "-D_BOARD_FUBARINO_MINI_"; "-DMPIDEVER=16777998"; "-DMPIDE=150 -DIDE=Arduino"; ] in
     let cmd = cmd @ [ "-G1024"; "-D__USB_ENABLED__"; "-D__USB_CDCACM__"; "-D__SERIAL_IS_USB__" ] in
     let cmd = cmd @ [ "-o"; (conc_pic32 "Board_Data.o"); (conc_pic32 "Board_Data.c") ] in
     run cmd;
 
-    let cmd = [ Config.pic32_cc  ] @ default_pic32_cc_options in
+    let cmd = [ Config.pic32_cxx  ] @ default_pic32_cxx_options in
     let cmd = cmd @ [ "-mprocessor=32MX250F128D" ] in
-    let cmd = cmd @ [ "-o"; output_path; input_path;  (conc_pic32 "Board_Data.o") ] in
+    let cmd = cmd @ [ "-o"; output_path; input_path; (conc_pic32 "Board_Data.o") ] in
     let cmd = cmd @ [ (conc_pic32 "crtn.S"); (conc_pic32 "pic32_software_reset.S"); (conc_pic32 "cpp-startup.S"); (conc_pic32 "crti.S") ] in
-    let cmd = cmd @ [ (conc_pic32 "cores/core_no_main.a"); "-L./cores" ] in
+    let cmd = cmd @ [ (conc_pic32 "cores/core.a"); "-L./cores" ] in
     let cmd = cmd @ [ "-Wl,--save-gld=sketch.ld,-Map=" ^ (conc_pic32 "ld/sketch.map") ^ ",--gc-sections" ] in
     let cmd = cmd @ [  "-lm"; "-T"; (conc_pic32 "ld/chipKIT-application-32MX250F128.ld"); "-T"; (conc_pic32 "ld/chipKIT-application-COMMON.ld") ] in
     run cmd

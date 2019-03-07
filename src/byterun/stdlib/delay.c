@@ -1,4 +1,4 @@
-void delay(int count){
+void stdlib_delay(int count){
   #ifdef __AVR__
   while(count--) {
     _delay_ms(1);

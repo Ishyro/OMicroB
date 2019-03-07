@@ -65,7 +65,7 @@ check_command "gcc"
 check_command "avr-g++"
 check_command "avr-objcopy"
 check_command "avrdude"
-check_command "pic32-gcc"
+check_command "pic32-g++"
 check_command "pic32-bin2hex"
 check_command "pic32prog"
 check_command "ocaml"
@@ -95,7 +95,7 @@ GXX="$(which g++)"
 AVR_GXX="$(which avr-g++)"
 AVR_OBJCOPY="$(which avr-objcopy)"
 AVRDUDE="$(which avrdude)"
-PIC32_GCC="/home/ishyro/.arduino15/packages/chipKIT/tools/pic32-tools/1.43-pic32gcc/bin/pic32-gcc"
+PIC32_GXX="/home/ishyro/.arduino15/packages/chipKIT/tools/pic32-tools/1.43-pic32gcc/bin/pic32-g++"
 PIC32_BIN2HEX="/home/ishyro/.arduino15/packages/chipKIT/tools/pic32-tools/1.43-pic32gcc/bin/pic32-bin2hex"
 PIC32PROG="$(which pic32prog)"
 OCAML="$(which ocaml.opt 2> /dev/null || which ocaml)"
@@ -163,7 +163,7 @@ GXX         := $GXX
 AVR_GXX     := $AVR_GXX
 AVR_OBJCOPY := $AVR_OBJCOPY
 AVRDUDE     := $AVRDUDE
-PIC32_GCC     := $PIC32_GCC
+PIC32_GXX     := $PIC32_GXX
 PIC32_BIN2HEX := $PIC32_BIN2HEX
 PIC32PROG     := $PIC32PROG
 OCAMLC      := $OCAMLC -w A-58-e -warn-error A -safe-string -strict-formats -strict-sequence
@@ -200,7 +200,7 @@ let cxx         = \"$GXX\"
 let avr_cxx     = \"$AVR_GXX\"
 let avr_objcopy = \"$AVR_OBJCOPY\"
 let avrdude     = \"$AVRDUDE\"
-let pic32_cc    = \"$PIC32_GCC\"
+let pic32_cxx    = \"$PIC32_GXX\"
 let pic32_bin2hex = \"$PIC32_BIN2HEX\"
 let pic32prog   = \"$PIC32PROG\"
 let version     = \"$VERSION\"
