@@ -1,6 +1,4 @@
 let _ =
-  _init ();
-  schedule_task ();
   pin_mode PIN1 OUTPUT;
   while true do
     digital_write PIN1 HIGH;

@@ -24,7 +24,5 @@ let calcul () =
   pi > 3. && pi < 4.
 
 let _ =
-  _init ();
-  schedule_task ();
   pin_mode PIN1 OUTPUT;
   digital_write PIN1 (if calcul () then HIGH else LOW)

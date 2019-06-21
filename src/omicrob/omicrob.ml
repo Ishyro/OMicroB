@@ -591,6 +591,13 @@ let () =
 
   let available_byte = ref input_byte
 
+  (* for the wrapper OCaml for pic32 *)
+  let pic32dir =
+    if local then Filename.concat Config.builddir "src/byterun/pic32"
+    else Filename.concat Config.includedir "pic32"
+
+  let conc_pic32 s = Filename.concat pic32dir s
+
   let () =
     if input_mls <> [] || input_cmos <> [] then (
       should_be_none_file input_byte;
@@ -624,7 +631,8 @@ let () =
       let cmd = [ Config.ocamlc ] @ default_ocamlc_options @ ppx_options @ [ "-custom" ] @ mlopts in
       let cmd = if trace > 0 then cmd @ [ "-ccopt"; "-DDEBUG=" ^ string_of_int trace ] else cmd in
       let cmd = cmd @ List.flatten (List.map (fun cxxopt -> [ "-ccopt"; cxxopt ]) cxxopts) in
-      let cmd = cmd @ input_paths @ [ "-o"; output_path ] in
+      let cmd = cmd @ (if(!default_config.typeD = PIC32)
+                                      then [ conc_pic32 "wrapper.ml" ] else []) @ input_paths @ [ "-o"; output_path ] in
       let cmd = cmd @ (if(!default_config.typeD = AVR)
                  then [ "-open"; "Avr";
                         "-open"; Printf.sprintf "Avr.%s" !default_config.pins_module ]
