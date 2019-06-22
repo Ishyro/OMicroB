@@ -1,8 +1,4 @@
-open Pic32
-
 let _ =
-  _init ();
-  schedule_task ();
   pin_mode PINA0 OUTPUT;
   let brightness = ref 0
   and fade_amount = 5 in

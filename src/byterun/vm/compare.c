@@ -12,7 +12,7 @@
 
 /******************************************************************************/
 
-static int8_t compare_customs(uint8_t flag, value v1, value v2) {
+PROGMEM static int8_t compare_customs(uint8_t flag, value v1, value v2) {
   if (flag == INT32_CUSTOM_FLAG) {
     return int32_compare(v1, v2);
   } else if (flag == INT64_CUSTOM_FLAG) {
@@ -27,7 +27,7 @@ static int8_t compare_customs(uint8_t flag, value v1, value v2) {
 
 #define UNORDERED 2
 
-static int8_t compare_val(value v1, value v2, bool total) {
+PROGMEM static int8_t compare_val(value v1, value v2, bool total) {
   if (v1 == v2 && total) {
     return 0;
   }
@@ -42,17 +42,17 @@ static int8_t compare_val(value v1, value v2, bool total) {
       switch(t1) {
       case String_tag:
         return string_compare(v1, v2);
-        
+
       case Abstract_tag:
         caml_raise_invalid_argument("compare: abstract value");
-        
+
       case Closure_tag:
       case Infix_tag:
         caml_raise_invalid_argument("compare: functional value");
-        
+
       case Object_tag:
         return Oid_val(v1) - Oid_val(v2);
-        
+
       case Custom_tag: {
         unsigned char flag1 = Field(v1, 0);
         unsigned char flag2 = Field(v2, 0);
@@ -60,7 +60,7 @@ static int8_t compare_val(value v1, value v2, bool total) {
         if (flag1 > flag2) return 1;
         return compare_customs(flag1, v1, v2);
       }
-        
+
       default: {
         mlsize_t sz1 = Wosize_val(v1);
         mlsize_t sz2 = Wosize_val(v2);

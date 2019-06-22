@@ -1,3 +1,3 @@
 let _ =
   _init ();
-  schedule_task ();
+  schedule_task ()

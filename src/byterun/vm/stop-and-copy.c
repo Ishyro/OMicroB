@@ -32,21 +32,21 @@
  * current_heap : 1 ou 2 selon le tas actif
  * les appels d'allocations mémoires ne savent pas dans quel tas seront placé les données.
  */
-static const value *heap1_start, *heap2_start;
-static const value *heap1_end, *heap2_end;
-static int current_heap;
+PROGMEM static const value *heap1_start, *heap2_start;
+PROGMEM static const value *heap1_end, *heap2_end;
+PROGMEM static int current_heap;
 
 /* heap_ptr : pointeur du premier emplacement libre du tas
  * heap_end : pointeur de fin du tas courant */
 value *heap_ptr, *heap_end;
 
 /* heap_todo : indique ce qui reste à déplacer */
-static value *heap_todo;
+PROGMEM static value *heap_todo;
 
 /* des variables internes utiles pour le gc */
-static value *new_heap, *old_heap;
-static value* tab_heap_start[2];
-static value* tab_heap_end[2];
+PROGMEM static value *new_heap, *old_heap;
+PROGMEM static value* tab_heap_start[2];
+PROGMEM static value* tab_heap_end[2];
 
 /* Initialisation du GC
  * Cette fonction doit être appelée avant toute allocation du programme ;
@@ -69,7 +69,7 @@ void gc_init(void) {
 
 #if defined(__PC__) && DEBUG >= 3 // DUMP STACK AND HEAP
 
-static void clean_heap(){
+PROGMEM static void clean_heap(){
   value* from = tab_heap_start[(current_heap+1)%2];
   value* to = tab_heap_end[(current_heap+1)%2];
   for(value* ptr = from ; ptr < to; ptr++){
@@ -161,7 +161,7 @@ void gc_one_val(value* ptr, int update) {
 
 void gc(void) {
   gc_count ++;
-  
+
 #if defined(__PC__) && DEBUG >= 1 // TRACE GC RUNS
   printf("#################### STOP & COPY ####################\n");
 #endif

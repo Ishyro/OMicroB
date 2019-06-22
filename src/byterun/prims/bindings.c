@@ -34,8 +34,8 @@ value caml_avr_delay(value ms) {
   return Val_unit;
 }
 
-value caml_pic32_millis() {
-  return Val_int(pic32_millis());
+value caml_avr_millis() {
+  return Val_int(avr_millis());
 }
 
 /******************************************************************************/
@@ -93,6 +93,10 @@ value caml_pic32_analog_read(value pin) {
 value caml_pic32_delay(value ms) {
   pic32_delay(Int_val(ms));
   return Val_unit;
+}
+
+value caml_pic32_millis() {
+  return Val_int(pic32_millis());
 }
 
 /******************************************************************************/

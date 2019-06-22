@@ -1,9 +1,7 @@
-open Pic32
-
 (** Monte Carlo *)
 
 let r = 10 (** circle radius *)
-let n = 30 (** number of points *)
+let n = 50 (** number of points *)
 
 let points () =
   let rec loop n acc =
